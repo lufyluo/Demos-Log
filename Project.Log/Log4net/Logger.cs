@@ -1,4 +1,6 @@
-﻿using log4net;
+﻿using System.Configuration;
+using log4net;
+using static System.Configuration.ConfigurationSettings;
 
 namespace Project.Log.Log4net
 {
@@ -6,7 +8,13 @@ namespace Project.Log.Log4net
     {
         private static ILog _logger;
         private static readonly object LogLock = 1;
+        private static readonly string Appender;
         private Logger() { }
+
+        static Logger()
+        {
+            Appender =ConfigurationManager.AppSettings["LogAppend"] ?? "ConsoleAppender";
+        }
 
         public static ILog Log
         {
@@ -19,7 +27,7 @@ namespace Project.Log.Log4net
                     {
                         if (_logger == null)
                         {
-                            _logger = LogManager.GetLogger("ElasticsearchAppender");
+                            _logger = LogManager.GetLogger(Appender);
                         }
                     }
                 }
